@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/vue-2.5.9.js" type="text/javascript" charset="utf-8"></script>
+		
+	</head>
+	<body>
+		<div id="app" ref="app">{{name}}</div>
+		<script type="text/javascript">
+			let app = new Vue({
+				el:"#app",
+				data:{
+					name:'前端君'
+				},
+				beforeCreate(){
+					console.log("即将创建");
+					console.log(this.$data); // undefined
+					console.log(this.$el);   //undefined
+				},
+				created(){
+					console.log("创建完毕");
+					console.log(this.$data);  //object 数据获取到了
+					console.log(this.$el);    //undefined  dom还没渲染出来
+				},
+				beforeMount(){
+					console.log("即将挂载");
+					console.log(this.$data); // object 数据获取到了
+					console.log(this.$el);   // dom被渲染 但是数据没有被渲染 <div id="app">{{name}}</div>
+				},
+				mounted(){
+					console.log("挂载完毕");
+					console.log(this.$data); // object 数据获取到了
+					console.log(this.$el);  //dom被渲染 数据被渲染 <div id="app">前端君</div>
+				},
+				beforeUpdate(){
+					console.log("=即将更新渲染=");
+					let name = this.$refs.app.innerHTML;
+					console.log('name:'+name);
+				},
+				updated(){
+					console.log("=更新成功=");
+					let name = this.$refs.app.innerHTML;
+					console.log('name:'+name);
+				},
+				beforeDestroy(){
+					console.log("销毁之前");
+				},
+				destroyed(){
+					console.log("销毁成功");
+				},
+			})
+		</script>
+	</body>
+</html>
