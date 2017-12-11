@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0"/>
+		<title>todoList</title>
+		<script src="js/vue-2.5.9.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.finish {
+				text-decoration: line-through;
+				color: #ccc;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<input type="text" v-model="task.content" placeholder="编写任务" @keydown.enter="addTask"/><br />
+			<ul class="list">
+				<li class="item" v-for="(item,index) in list">
+					<input type="checkbox" @click="changeState(index)" :checked="item.finished"/>
+					<span :class="{'finish':item.finished}">{{item.content}}</span>
+					<button class="del" @click="removeTask(index)">删除</button>
+				</li>
+			</ul>
+			<p v-if="list.length===0">暂时没有任务</p>
+		</div>
+		<script type="text/javascript">
+			const app = new Vue({
+				el:"#app",
+				data:{
+					task:{
+						content:'',//默认内容为空
+						finished:false,//未完成
+						deleted:false//未删除
+					},
+					list:[],
+				},
+				methods:{
+					addTask(){
+						this.list.push(this.task);
+						this.task = {
+							content:'',//默认内容为空
+							finished:false,//未完成
+							deleted:false//未删除
+						}
+					},
+					changeState(index){
+						let curState = this.list[index].finished;
+						this.list[index].finished = !curState;
+					},
+					removeTask(index){
+						this.list.splice(index,1);
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

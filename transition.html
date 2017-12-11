@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>动画效果</title>
+		<style type="text/css">
+			#app{
+				width: 200px;
+				height: 300px;
+				border: 1px solid #ccc;
+			}
+			.box{
+				width: 200px;
+				height: 200px;
+				background-color: aquamarine;
+				opacity: 1;
+				margin-left: 0;
+			}
+			.box-enter-active,
+			.box-leave-active{
+				transition:  all .8s;
+			}
+			.box-enter,
+			.box-leave-active{
+				opacity: 0;
+				margin-left: 200px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app" class="app">
+			<button class="btn" @click="showBox=!showBox">切换</button>
+		<transition name="box">
+			<div class="box" v-show="showBox">
+				i am the box
+			</div>
+		</transition>
+		</div>
+		<script src="js/vue-2.5.9.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			/*
+			 v-enter进入过渡效果
+			 v-enter-active 进入过渡的结束状态
+			 v-leave 离开过渡的开始那一刻
+			 v-leave-active 离开过渡的结束状态
+			 * */
+			const app = new Vue({
+				el:"#app",
+				data:{
+					showBox:false
+				}
+			})
+		</script>
+	</body>
+</html>

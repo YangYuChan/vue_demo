@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>父子组件传递数据</title>
+		<script src="js/vue-2.5.9.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			<!--<son :message="msg"></son>-->
+			<!--父组件监听这个事件‘connect’，监听方式跟普通原生的事件一模一样，也是用 v-on 指令，缩写用@符号-->
+			<son @connect="say"></son>
+		</div>
+		<script type="text/javascript">
+			Vue.component('son',{
+				props:['message'],
+//				template:'<div>{{message}}</div>'
+				template:'<button @click="send">点击</button>',
+				data(){
+					return {
+						msg:'大家好，我是子组件里的数据'
+					}
+				},
+				methods:{
+					send(){
+						this.$emit('connect',this.msg); //方法体里面会触发一个事件，事件名取名为：“connect”,同时可以把子组件的数据作为参数传递出来
+					}
+				}
+			});
+			const app = new Vue({
+				el:"#app",
+				data:{
+					msg:"我是父组件的数据"
+				},
+				methods:{
+					say(msg){
+						console.log(msg);
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
