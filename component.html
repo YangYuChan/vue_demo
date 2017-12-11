@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>组件</title>
+		<script src="js/vue-2.5.9.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.clearfix{
+				display: table;
+				content: "";
+			}
+			.clearfix:after{
+				clear:both
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<my-article v-for="item in article" :detail="item"></my-article>
+		</div>
+		<script type="text/javascript">
+			//组件要创建在实例之前
+			Vue.component('my-article',{
+				props:["detail"],
+				template:'<div class="clearfix" style="border-bottom:1px solid #ccc">'
+						+'<div style="float:left;">'
+						+'<h1>{{detail.title}}</h1>'
+						+'<div>'
+						+'<span>{{detail.date}}</span>'
+						+'<span v-show="detail.is_original">原创</span>'
+						+'</div>'
+						+'</div>'
+						+'<img :src="detail.cover_url" alt="" style="float:right;width:100px">'
+						+'</div>'
+			});
+			let vm = new Vue({
+				el:"#app",
+				data:{
+					article:[{
+						title:'第一节，vuejs框架是什么',
+						date:'2017年09月03日',
+						is_original:true,
+						cover_url:'img/logo.png'
+					},{
+						title:'第二节，简易安装和快速入门VUE',
+						date:'2017年09月03日',
+						is_original:true,
+						cover_url:'img/logo.png'
+					},{
+						title:'第三节，创建一个Vue实例',
+						date:'2017年09月03日',
+						is_original:true,
+						cover_url:'img/logo.png'
+					},{
+						title:'第四节，定义一个vue实例的4个常用选项',
+						date:'2017年09月03日',
+						is_original:true,
+						cover_url:'img/logo.png'
+					}]
+				}
+			});
+		</script>
+	</body>
+</html>
