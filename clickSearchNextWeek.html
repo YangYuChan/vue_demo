@@ -1,0 +1,319 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>获取当前日期及当前所在一周日期-jq22.com</title>
+<script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+<style>
+* {
+	margin:0;
+	padding:0;
+}
+body {
+	font-family:"Microsoft YaHei","微软雅黑";
+	font-size:16px;
+}
+.clear:after {
+	content:" ";
+	display:block;
+	height:0;
+	visibility:hidden;
+	clear:both;
+}
+ul {
+	list-style:none;
+}
+.wrap {
+	width:100%;
+	margin:0 auto;
+}
+.wrap-main {
+	width:80%;
+	margin:0 auto;
+	padding-top:50px;
+}
+.wrap-main>table {
+	width:100%;
+	margin:0 auto;
+	text-align:center;
+	line-height:40px;
+	cursor:pointer;
+	border-color:#cccccc;
+}
+.wrap-main .list,.wrap-main .list>ul {
+	width:100%;
+	margin:0 auto;
+}
+.wrap-main .list {
+	padding-top:50px;
+}
+.wrap-main .list>ul>li {
+	width:80%;
+	margin:0 auto;
+	padding-top:20px;
+}
+.wrap-main .list>ul>li:nth-child(3) div {
+	margin-left:100px;
+	line-height:40px;
+}
+.wrap-main .list>ul>li:nth-child(3) div label {
+	width:30%;
+	display:inline-block;
+}
+.wrap-main .list>ul>li>span {
+	display:inline-block;
+	width:100px;
+	line-height:40px;
+}
+.wrap-main .list>ul>li>select {
+	width:70%;
+	height:40px;
+	border:1px solid #cccccc;
+	border-radius:3px;
+	font-size:16px;
+	font-family:"Microsoft YaHei","微软雅黑";
+	text-indent:10px;
+}
+.wrap-main .list>ul>li>select>option {
+	line-height:30px;
+	border:1px solid #cccccc;
+}
+.wrap-main .list>ul>li>input {
+	width:70%;
+	line-height:39px;
+	border:1px solid #cccccc;
+	border-radius:3px;
+	font-size:16px;
+	font-family:"Microsoft YaHei","微软雅黑";
+	text-indent:10px;
+}
+.wrap-main .list>ul>li>button {
+	line-height:40px;
+	font-family:"Microsoft YaHei","微软雅黑";
+	font-size:16px;
+	width:150px;
+	outline:none;
+	background-color:#1e9be8;
+	border-radius:5px;
+	color:#ffffff;
+	margin-left:40%;
+	margin-top:5%;
+}
+.active {
+	background-color:#7fceff;
+	color:white;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+    <div class="wrap-main">
+        <table style="text-align: right">
+            <tbody><tr>
+                <td>
+                    <input type="button" name="previousweek" value="上一周" onclick="previousWeek();">&nbsp;
+                    <span id="showdate"></span>&nbsp;
+                    <input type="button" name="previousweek" value="下一周" onclick="nextWeek();">
+                </td>
+            </tr>
+        </tbody></table>
+        <!--显示日期-->
+        <table id="mytable" cellspacing="0" border="=&quot;1&quot;" align="center">
+            <tbody><tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody></table>
+        <div class="newtime" style="display: none;">
+
+        </div>
+        <div class="datetime" style="display: none;"><input type="text"></div>
+    </div>
+</div>
+
+<script>
+window.onload = function() {
+    initDate()
+};
+
+/*******************************/
+var currDT;
+var aryDay = new Array("日", "一", "二", "三", "四", "五", "六"); //显示星期
+var lastDay; //页面显示的最后一天
+var firstDay; //页面显示的第一天
+var date = new Date; //获取完整日期
+var year = date.getFullYear(); //获取当前年份
+//    alert(year);
+//初始化日期加载
+function initDate() {
+    currDT = new Date();
+    showdate.innerHTML = currDT.toLocaleDateString(); //显示日期
+    var dw = currDT.getDay(); //从Date对象返回一周中的某一天(0~6)
+    var tdDT; //日期
+
+    //在表格中显示一周的日期
+    var objTB = document.getElementById("mytable"); //取得表格对象
+    for (var i = 0; i < 7; i++) {
+        tdDT = getDays()[i];
+
+        dw = tdDT.getDay(); //星期几
+        objTB.rows[0].cells[i].innerHTML = tdDT.getMonth() + 1 + "月" + tdDT.getDate() + "日 星期" + aryDay[dw]; //显示
+        var newtime = '<input type="text" value="' + year + "-" + (tdDT.getMonth() + 1) + "-" + tdDT.getDate() + '">';
+        $(".newtime").append(newtime);
+
+        if (tdDT.toLocaleDateString() == currDT.toLocaleDateString()) {
+            objTB.rows[0].cells[i].style.color = "white"; //currDT突出显示
+            objTB.rows[0].cells[i].style.backgroundColor = "#1e9be8"; //currDT突出显示
+            $(".datetime").find("input").val($(".newtime").find("input").eq(i).val())
+            //                alert($(".newtime").find("input").eq(i).val())
+        }
+    }
+    //重新赋值
+    lastDay = getDays()[6]; //本周的最后一天
+    firstDay = getDays()[0]; //本周的第一天
+}
+
+//取得当前日期一周内的某一天
+function getWeek(i) {
+    var now = new Date();
+    var n = now.getDay();
+    var start = new Date();
+    start.setDate(now.getDate() - n + i); //取得一周内的第一天、第二天、第三天...
+    return start;
+}
+
+//取得当前日期一周内的七天
+function getDays() {
+    var days = new Array();
+    for (var i = 1; i <= 7; i++) {
+        days[i - 1] = getWeek(i);
+    }
+    return days;
+}
+
+//取得下一周的日期数(共七天)
+function getNextWeekDatas(ndt) {
+	console.log(ndt)
+    var days = new Array();
+    for (var i = 1; i <= 7; i++) {
+        var dt = new Date(ndt);
+        console.log(dt)
+        days[i - 1] = getNextWeek(dt, i);
+    }
+    return days;
+}
+
+//指定日期的下一周(后七天)
+function getNextWeek(dt, i) {
+	
+    var today = dt;
+    today.setDate(today.getDate() + i);
+    return today;
+}
+
+
+//取得上一周的日期数(共七天)
+function getPreviousWeekDatas(ndt) {
+    var days = new Array();
+    for (var i = -7; i <= -1; i++) {
+        var dt = new Date(ndt);
+        days[7 + i] = getPreviousWeek(dt, i);
+    }
+    return days;
+}
+
+//指定日期的上一周(前七天)
+function getPreviousWeek(dt, i) {
+    var today = dt;
+    today.setDate(today.getDate() + i);
+    return today;
+}
+
+//下一周
+function nextWeek() {
+    setCurrDTAfter(); //重设时间
+    showdate.innerHTML = currDT.toLocaleDateString(); //显示日期
+
+    //在表格中显示一周的日期
+    var objTB = document.getElementById("mytable"); //取得表格对象
+    var dw = currDT.getDay(); //从Date对象返回一周中的某一天(0~6)
+    var tdDT; //日期
+    $(".newtime input").remove();
+    for (var i = 0; i < 7; i++) {
+        tdDT = getNextWeekDatas(lastDay)[i];
+
+        dw = tdDT.getDay(); //星期几
+        objTB.rows[0].cells[i].innerHTML = tdDT.getMonth() + 1 + "月" + tdDT.getDate() + "日 星期" + aryDay[dw]; //显示
+        var newtime = '<input type="text" value="' + year + "-" + (tdDT.getMonth() + 1) + "-" + tdDT.getDate() + '">';
+        $(".newtime").append(newtime);
+
+        if (tdDT.toLocaleDateString() == currDT.toLocaleDateString()) {
+            objTB.rows[0].cells[i].style.color = "white"; //currDT突出显示
+            objTB.rows[0].cells[i].style.backgroundColor = "#1e9be8"; //currDT突出显示
+            $(".datetime").find("input").val($(".newtime").find("input").eq(i).val())
+        }
+    }
+    //重新赋值
+    firstDay = getNextWeekDatas(lastDay)[0]; //注意赋值顺序1
+    lastDay = getNextWeekDatas(lastDay)[6]; //注意赋值顺序2
+}
+
+//上一周
+function previousWeek() {
+    settCurrDTBefore();
+    showdate.innerHTML = currDT.toLocaleDateString(); //显示日期
+
+    //在表格中显示一周的日期
+    var objTB = document.getElementById("mytable"); //取得表格对象
+    var dw = currDT.getDay(); //从Date对象返回一周中的某一天(0~6)
+    var tdDT; //日期
+    $(".newtime input").remove();
+    for (var i = 0; i < 7; i++) {
+        tdDT = getPreviousWeekDatas(firstDay)[i];
+
+        dw = tdDT.getDay(); //星期几
+        objTB.rows[0].cells[i].innerHTML = tdDT.getMonth() + 1 + "月" + tdDT.getDate() + "日 星期" + aryDay[dw]; //显示
+        var newtime = '<input type="text" value="' + year + "-" + (tdDT.getMonth() + 1) + "-" + tdDT.getDate() + '">';
+        $(".newtime").append(newtime);
+
+        if (tdDT.toLocaleDateString() == currDT.toLocaleDateString()) {
+            objTB.rows[0].cells[i].style.color = "white"; //currDT突出显示
+            objTB.rows[0].cells[i].style.backgroundColor = "#1e9be8"; //currDT突出显示
+            $(".datetime").find("input").val($(".newtime").find("input").eq(i).val())
+        }
+    }
+    //重新赋值
+    lastDay = getPreviousWeekDatas(firstDay)[6]; //注意赋值顺序1
+    firstDay = getPreviousWeekDatas(firstDay)[0]; //注意赋值顺序2
+}
+
+//当前日期后第七天
+function setCurrDTAfter() {
+    currDT.setDate(currDT.getDate() + 7);
+}
+
+//当前日期前第七天
+function settCurrDTBefore() {
+    currDT.setDate(currDT.getDate() - 7);
+}
+
+/**********************************************************************/
+$("#mytable tr td").click(function() {
+    $("#mytable tr td").removeAttr("class");
+    $(this).attr("class", "active");
+    //        alert($(this).index())
+    var num = $(this).index();
+    //        alert(num)
+    //        alert($(".newtime").find("input").eq(num).val())
+    $(".datetime").find("input").val($(".newtime").find("input").eq(num).val());
+    alert($(".datetime").find("input").val())
+});
+</script>
+
+</body>
+</html>
